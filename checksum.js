@@ -228,7 +228,7 @@ const main = () => {
 
   // alters one random bit in receiver's data before calculating checkSum to simulate an error
 
-  alterFunction(receiver);
+  // alterFunction(receiver);
 
   receiver.checkSum = calculateCheckSum(receiver);
 

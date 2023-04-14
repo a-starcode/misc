@@ -77,7 +77,7 @@ const decryptMessagae = (message, shift) => {
 const main = () => {
   console.log();
 
-  const ORIGINAL_MESSAGE = "Defend the East wall of the Castle!";
+  const ORIGINAL_MESSAGE = "There is a new javascript framework made every hour";
 
   const SHIFT = 1;
 
