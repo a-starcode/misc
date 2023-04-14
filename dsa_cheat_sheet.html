@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Sorting</title>
+
+    <style media="screen">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: helvetica, sans-serif;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        width: 85%;
+        margin: auto;
+        margin-top: 20px;
+        padding: 18px;
+        color: #696969;
+        border: 3px solid black;
+      }
+
+      .info h2 {
+        text-align: center;
+        font-size: 42px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .info p {
+        font-family: arial;
+        padding-bottom: 12px;
+        font-size: 21px;
+      }
+
+      header {
+        display: flex;
+        width: 90%;
+        margin: auto;
+        margin-top: 4%;
+        justify-content: space-around;
+      }
+
+      header button {
+        background-color: #29bf12;
+        color: white;
+        padding: 15px;
+        border: 2px solid black;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      header button:hover {
+        background-color: #ec5578;
+        transition-duration: 180ms;
+      }
+
+      header h3 {
+        align-self: center;
+        font-size: 32px;
+      }
+
+      #array_container {
+        width: 90%;
+        margin: auto;
+        margin-top: 4%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        justify-content: center;
+      }
+
+      #array_box {
+        border: 3px solid;
+        display: flex;
+        text-align: center;
+        padding: 42px;
+        font-size: 38px;
+      }
+
+      .choices-container {
+        width: 85%;
+        margin: auto;
+        margin-top: 4%;
+        font-size: 22px;
+      }
+
+      .choices-container p {
+        padding-bottom: 13px;
+      }
+
+      .choices-container ul {
+        list-style: none;
+      }
+
+      .choices-container li {
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      .choices-container li:hover {
+        background-color: #29bf12;
+        color: white;
+      }
+
+      .output-container {
+        width: 85%;
+        margin: auto;
+        margin-top: 4%;
+        margin-bottom: 10%;
+        font-size: 20px;
+      }
+
+      .output-container h2 {
+        text-align: center;
+        font-size: 50px;
+        color: #ec5578;
+        margin-bottom: 10px;
+      }
+    </style>
+
+    <script type="text/javascript">
+      var arr = [];
+      var output_string = "";
+
+      function getData() {
+        var arr_elements = document.getElementsByName("data_values");
+
+        for (var i = 0; i < arr_elements.length; i++) arr.push(Number(arr_elements[i].value));
+      }
+
+      function printArray() {
+        output_string += "[";
+        for (var p = 0; p < arr.length - 1; p++) output_string += arr[p] + ", ";
+        output_string += arr[p] + "];";
+      }
+
+      function resetData() {
+        var arr_elements = document.getElementsByName("data_values");
+
+        for (var i = 0; i < arr_elements.length; i++) arr_elements[i].value = "";
+
+        arr = [];
+        output_string = "";
+
+        document.getElementById("output_title").innerHTML = "";
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function addBox() {
+        var element = document.createElement("input");
+        var div = document.getElementById("array_container");
+
+        element.setAttribute("id", "array_box");
+        element.setAttribute("type", "text");
+        element.setAttribute("name", "data_values");
+        element.setAttribute("placeholder", "type here");
+        div.append(element);
+      }
+
+      function bubbleSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Bubble Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br>";
+
+        for (var i = 0; i < arr.length - 1; i++) {
+          output_string += "<br> step " + (i + 1) + "<br>";
+
+          for (var j = 0; j < arr.length - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+              var temp = arr[j + 1];
+              arr[j + 1] = arr[j];
+              arr[j] = temp;
+
+              printArray();
+              output_string += " // " + arr[j + 1] + " > " + arr[j];
+              output_string += ", swapped " + temp + " with " + arr[j + 1] + "<br>";
+            } else {
+              printArray();
+              output_string += " // " + arr[j] + " < " + arr[j + 1];
+              output_string += ", no swap" + "<br>";
+            }
+          }
+        }
+
+        output_string += "<br><br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function insertSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Insertion Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br>";
+
+        var hole;
+
+        for (var i = 1; i < arr.length; i++) {
+          var val = arr[i]; // we picked this out : there's a hole here
+          hole = i;
+          var count = 0;
+          output_string += "<br>step " + i + "<br>";
+
+          while (hole > 0 && arr[hole - 1] > val) {
+            arr[hole] = arr[hole - 1];
+            hole--;
+            count++;
+          }
+
+          arr[hole] = val;
+
+          printArray();
+          output_string +=
+            " // picked up " +
+            val +
+            " from index " +
+            i +
+            " and placed it at index " +
+            hole +
+            " after shifting " +
+            count +
+            " elements towards right<br>";
+        }
+
+        output_string += "<br><br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function selectSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Selection Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br>";
+
+        for (var i = 0; i < arr.length - 1; i++) {
+          var min = i; // assuming first element is smallest
+
+          output_string += "<br>step " + (i + 1) + "<br>";
+
+          for (var j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[min]) min = j;
+          }
+
+          var temp = arr[i];
+          arr[i] = arr[min];
+          arr[min] = temp;
+
+          printArray();
+          output_string +=
+            " // swapped min-value: " +
+            arr[i] +
+            " which was at index " +
+            j +
+            " with " +
+            arr[min] +
+            " which was at index " +
+            i +
+            "<br>";
+        }
+
+        output_string += "<br><br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      // required for quickSort()
+      function partition(first, last) {
+        var pivot = arr[last];
+        var partitionIndex = first;
+
+        output_string +=
+          "<br>pivot = " + pivot + "; scanning from index " + first + " to " + (last - 1) + "<br>";
+
+        for (var i = first; i < last; i++) {
+          if (arr[i] <= pivot) {
+            output_string += "pIndex=" + partitionIndex + "; i=" + i + "; ";
+
+            printArray();
+            output_string +=
+              " // " +
+              arr[i] +
+              " is <= " +
+              pivot +
+              ", swapped " +
+              arr[i] +
+              " (at i) with " +
+              arr[partitionIndex] +
+              " (at pIndex)<br>";
+
+            var temp = arr[i];
+            arr[i] = arr[partitionIndex];
+            arr[partitionIndex] = temp;
+
+            partitionIndex++;
+          } else {
+            output_string += "pIndex=" + partitionIndex + "; i=" + i + "; ";
+            printArray();
+            output_string += " // " + arr[i] + " > " + pivot + ", no swap<br>";
+          }
+        }
+
+        var t = arr[partitionIndex];
+        arr[partitionIndex] = arr[last];
+        arr[last] = t;
+
+        output_string += "pIndex=" + partitionIndex + "; i=" + i + "; ";
+        printArray();
+        output_string +=
+          " // All comparisions done, swapped pivot with element at partitionIndex (pIndex), therefore now pivot is sorted<br>";
+
+        return partitionIndex;
+      }
+
+      function actualQuickSort(start, end) {
+        if (start < end) {
+          var pIndex = partition(start, end); // partition index
+
+          actualQuickSort(start, pIndex - 1);
+          actualQuickSort(pIndex + 1, end);
+        }
+      }
+
+      function quickSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Quick Sort";
+
+        output_string +=
+          "<b>NOTE : In this implementation we are assuming pivot to always be the right most element</b> (write this in your answer sheet)<br><br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br><br>";
+
+        actualQuickSort(0, arr.length - 1);
+
+        output_string += "<br>Now we merge all steps and the array is sorted";
+        output_string += "<br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      var stepOne = true;
+
+      function printArrayCustom(res) {
+        if (res.length > 0) {
+          output_string += "[";
+          for (var p = 0; p < res.length - 1; p++) output_string += res[p] + ", ";
+          output_string += res[p] + "];";
+        } else output_string += "[];";
+      }
+
+      var rightArray,
+        tempArray,
+        flag2 = true;
+
+      function merge(left, right) {
+        var result = [];
+
+        while (left.length && right.length) {
+          if (left[0] <= right[0]) {
+            result.push(left.shift());
+          } else {
+            result.push(right.shift());
+          }
+        }
+
+        while (left.length) result.push(left.shift());
+        while (right.length) result.push(right.shift());
+
+        output_string += "Merged and sorted array : ";
+        printArrayCustom(result);
+
+        if (result.length == tempArray.length && flag2 == true) {
+          output_string += "<br><br><b>__RIGHT SUB TREE__</b>";
+          flag2 = false;
+        } else {
+          output_string += "<br><br>";
+        }
+
+        return result;
+      }
+
+      function actualMergeSort(array, flag) {
+        if (array.length < 2) {
+          return array;
+        }
+
+        var mid = Math.floor(array.length / 2);
+        var left = array.slice(0, mid);
+        var right = array.slice(mid, array.length);
+
+        if (flag == true) {
+          tempArray = left;
+          rightArray = right;
+        }
+
+        if (array.length == arr.length) {
+          output_string += "Original array ";
+          printArrayCustom(array);
+          output_string += " is split into two parts : <br>LeftSubTree";
+          printArrayCustom(left);
+          output_string += " RightSubTree";
+          printArrayCustom(right);
+          output_string += "<br>" + "<br><b>__LEFT SUB TREE__</b>";
+        } else {
+          output_string += "<br>";
+          printArrayCustom(array);
+          output_string += " is split into two parts : ";
+
+          output_string += "<br>Left";
+          printArrayCustom(left);
+          output_string += " Right";
+          printArrayCustom(right);
+          output_string += "<br>";
+        }
+
+        return merge(actualMergeSort(left, false), actualMergeSort(right, false));
+      }
+
+      function mergeSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Merge Sort";
+
+        output_string +=
+          "<b>NOTE : Wherever it says 'Merged and sorted array' look at the numbers inside that array and figure out which two arrays from above were merged and draw the diagram accordingly. It's easy, you'll figure it out</b><br><br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br><br>";
+
+        arr = actualMergeSort(arr, true);
+
+        output_string +=
+          "the last 'Merged and sorted array' is the final output and is not a part of RightSubTree";
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function makeHeap(n, i) {
+        var largest = i;
+        var l = 2 * i + 1;
+        var r = 2 * i + 2;
+
+        if (l < n && arr[l] > arr[largest]) largest = l;
+        if (r < n && arr[r] > arr[largest]) largest = r;
+
+        if (largest != i) {
+          var temp = arr[i];
+          arr[i] = arr[largest];
+          arr[largest] = temp;
+
+          makeHeap(n, largest);
+        }
+      }
+
+      function actualHeapSort() {
+        for (var i = Math.floor(arr.length / 2) - 1; i >= 0; i--) makeHeap(arr.length, i);
+
+        output_string += "Built the heap : ";
+        printArray(arr);
+        output_string += " // Now we sort it<br>";
+
+        for (var i = arr.length - 1; i > 0; i--) {
+          output_string += "<br>After heapify : ";
+          printArray();
+
+          var temp = arr[0];
+          arr[0] = arr[i];
+          arr[i] = temp;
+
+          output_string +=
+            " // we will swap current root '" +
+            arr[i] +
+            "' with '" +
+            arr[0] +
+            "' so " +
+            arr[i] +
+            " will be sorted<br>After swapping Heap becomes : ";
+          printArray();
+          output_string +=
+            " // but this is not max heap, so we heapify again from index 0 to " + (i - 1) + "<br>";
+
+          makeHeap(i, 0);
+        }
+      }
+
+      function heapSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Heap Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br><br>";
+
+        actualHeapSort();
+
+        output_string += "<br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function shellSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Shell Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br>";
+
+        for (var gap = Math.floor(arr.length / 2); gap > 0; gap = Math.floor(gap / 2)) {
+          output_string += "<br>for gap = " + gap + "<br>";
+
+          for (var j = gap; j < arr.length; j++) {
+            var temp = arr[j];
+
+            var i = 0;
+            for (i = j; i >= gap && arr[i - gap] > temp; i -= gap) {
+              printArray();
+              output_string +=
+                " // " +
+                arr[i - gap] +
+                " > " +
+                temp +
+                ", swapping " +
+                arr[i] +
+                " with " +
+                arr[i - gap] +
+                "<br>";
+
+              arr[i] = arr[i - gap];
+            }
+            arr[i] = temp;
+          }
+          output_string += "In all other comparisions, there was no need to swap, reducing gap<br>";
+        }
+
+        output_string += "<br>Final sorted array : ";
+        printArray();
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function bucketSort() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Bucket Sort";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array (verify your input here, it should match what you entered above)<br>";
+
+        var buckets = [[], [], [], [], [], [], [], [], [], []];
+        var result = [];
+
+        // push individual elements into respective buckets
+        for (var i = 0; i < arr.length; i++) {
+          var temp = arr[i].toString();
+          var digit = temp[2];
+
+          buckets[Number(digit)].push(arr[i]);
+        }
+
+        // printing to output
+        for (var i = 0; i < 10; i++) {
+          output_string += "<br>buckets[" + i + "] : [";
+
+          for (var j = 0; j < buckets[i].length; j++) {
+            if (j + 1 == buckets[i].length) output_string += buckets[i][j];
+            else output_string += buckets[i][j] + ", ";
+          }
+          output_string += "]";
+        }
+
+        output_string +=
+          "<br><br>Now we sort each individual bucket using any sorting alogrithm<br>";
+
+        // sort the individual elements
+        for (var i = 0; i < 10; i++) {
+          buckets[i].sort();
+        }
+
+        // printing to output
+        for (var i = 0; i < 10; i++) {
+          output_string += "<br>buckets[" + i + "] : [";
+
+          for (var j = 0; j < buckets[i].length; j++) {
+            if (j + 1 == buckets[i].length) output_string += buckets[i][j];
+            else output_string += buckets[i][j] + ", ";
+          }
+          output_string += "]";
+        }
+
+        // place them into result array
+        for (var i = 0; i < 10; i++) {
+          if (buckets[i].length != 0) result = result.concat(buckets[i]);
+        }
+
+        output_string +=
+          "<br><br>Now we merge all the buckets in order<br><br>Final sorted array : ";
+        printArrayCustom(result);
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+
+      function binarySearch() {
+        getData(); // fetch the numbers from text boxes
+
+        document.getElementById("output_title").innerHTML = "Binary Search";
+
+        output_string += "<br>step 0<br>[";
+
+        for (var x = 0; x < arr.length - 1; x++) output_string += arr[x] + ", ";
+
+        output_string +=
+          arr[x] +
+          "]; // entered array + key at the end (verify your input here, it should match what you entered above)<br>";
+
+        var l = 0,
+          r = arr.length - 2,
+          mid,
+          key = arr[arr.length - 1],
+          flag = false;
+        var count = 1;
+
+        while (l <= r) {
+          mid = Math.floor(l + (r - l) / 2);
+
+          output_string += "<br>step " + count + "<br>";
+          printArray();
+          output_string +=
+            " // low = " +
+            l +
+            ", high = " +
+            r +
+            ", mid = " +
+            mid +
+            ", arr[mid] = " +
+            arr[mid] +
+            ";<br>";
+
+          if (arr[mid] == key) {
+            output_string += "<br>" + key + " found at index " + mid;
+            flag = true;
+            break;
+          } else if (key > arr[mid]) {
+            output_string +=
+              "key(" + key + ") is > " + arr[mid] + ", so now low = mid+1 = " + (mid + 1) + ";<br>";
+            l = mid + 1;
+          } else if (key < arr[mid]) {
+            output_string +=
+              "key(" +
+              key +
+              ") is < " +
+              arr[mid] +
+              ", so now high = mid-1 = " +
+              (mid - 1) +
+              ";<br>";
+            r = mid - 1;
+          }
+
+          count++;
+        }
+
+        if (flag == false) output_string += "<br>Looped ended, " + key + " not found in array";
+
+        document.getElementById("output").innerHTML = output_string;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="info">
+      <h2><u>Instructions</u></h2>
+      <p>
+        1. <u>Prerequisites</u>: look at the diagram of Merge sort from ppt, that's all you need to
+        know in order to understand this page. Try each algorithm atleast once to familiarize
+        yourself with the page
+      </p>
+      <br />
+      <p>
+        2. Click on an algorithm only once.
+        <b>After you're done with it and want to use another algorithm, **reload the page**.</b>
+        After refreshing you can overwrite the text boxes or use the same values again for a
+        different algorithm. Tip: use F5 to refresh.
+      </p>
+      <p>
+        3. Always read the text in bold, it contains useful information about usage of the page /
+        algorithm.
+      </p>
+      <p>
+        4. Every algorithm has a 'step 0', it is simply there to check if your entered input was
+        stored into the array properly or not, do not copy it in your answer.
+      </p>
+      <p>
+        5. This program does not contain Radix sort and full proof implementation of Bucket sort.
+      </p>
+      <p>
+        6. The algorithms were tested with the array given in DSA Tutorial 9 and there were no
+        mistakes.
+      </p>
+    </div>
+
+    <header>
+      <h3>Enter numbers in array :</h3>
+      <button type="button" name="add_element_btn" onclick="addBox()">ADD MORE BOXES</button>
+    </header>
+
+    <div id="array_container">
+      <input id="array_box" type="text" name="data_values" placeholder="type here" />
+      <input id="array_box" type="text" name="data_values" placeholder="type here" />
+      <input id="array_box" type="text" name="data_values" placeholder="type here" />
+    </div>
+
+    <div class="choices-container">
+      <p>Click to choose alogrithm</p>
+      <ul>
+        <li onclick="bubbleSort()">
+          <b>1. Bubble Sort</b> <br />[Worst case : O(n^2) Best case : O(n) Average Case : O(n^2)]
+        </li>
+        <li onclick="insertSort()">
+          <b>2. Insertion Sort</b> <br />[Worst case : O(n^2) Best case : O(n) Average Case :
+          O(n^2)]
+        </li>
+        <li onclick="selectSort()">
+          <b>3. Selection Sort</b> <br />[Worst case : O(n^2) Best case : O(n^2) Average Case :
+          O(n^2)]
+        </li>
+        <li onclick="quickSort()">
+          <b>4. Quick Sort</b> <br />[Worst case : O(n^2) Best case : O(n.log(n)) Average Case :
+          O(n.log(n))]
+        </li>
+        <li onclick="mergeSort()">
+          <b>5. Merge Sort</b> <br />[Worst case : O(n.log(n)) Best case : O(n.log(n)) Average Case
+          : O(n.log(n))]
+        </li>
+        <li onclick="heapSort()">
+          <b>6. Heap Sort</b> <br />[Worst case : O(n.log(n)) Best case : O(n) Average Case :
+          O(n.log(n))]
+        </li>
+        <li onclick="shellSort()">
+          <b>7. Shell Sort</b> <br />[Worst case : O(n^2) Best case : O(n.log(n)) Average Case :
+          O(n.log(n))]
+        </li>
+        <li onclick="bucketSort()">
+          <b>8. Bucket Sort (only use floating point numbers (eg : 0.123) else it won't work)</b>
+          <br />[Worst case : O(n^2) Best case : O(n) Average Case : O(n)]
+        </li>
+        <li onclick="binarySearch()">
+          <b
+            >9. Binary Search (last element of entered array should be the key you want to search
+            for)</b
+          >
+          <br />[Worst case : O(log(n)) Best case : O(1) Average Case : O(log(n))]
+        </li>
+        <li>
+          <b
+            >[Reload the page to reset, after refreshing you can overwrite the text boxes. This is
+            not a clickable button, reload by spamming F5]</b
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- Output -->
+    <div class="output-container">
+      <h2 id="output_title">Sample Output</h2>
+      <p id="output">
+        <br />
+        step 0 <br />
+        [100, 200, 300, 500, 150, 900]; // sample array <br />
+        <br />
+        step 1 <br />
+        [100, 200, 300, 150, 500, 900]; // swapped 150 with 500 <br />
+        <br />
+        step 2 <br />
+        [100, 200, 150, 300, 500, 900]; // swapped 300 with 150 <br />
+        <br />
+        step 3 <br />
+        [100, 150, 200, 300, 500, 900]; // swapped 200 with 150 <br />
+        <br />
+        step 4 <br />
+        [100, 150, 200, 300, 500, 900]; // swapped 200 with 150 <br /><br /><br />
+        Final sorted array : [100, 150, 200, 300, 500, 900];
+      </p>
+    </div>
+  </body>
+</html>
